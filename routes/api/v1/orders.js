@@ -16,12 +16,14 @@ router.post("/", (req, res) => {
     "status": "Succes",
     "data": {
         "order": { 
-            "customerId": req.body.customerId,
+            "orderId": req.params.orderId,
             "productId": req.body.productId,
+            "customerId": req.body.customerId, 
+            "orderDate": req.body.orderDate, 
+            "status": req.body.status, 
             "quantity": req.body.quantity,
-            "price": req.body.price,
-            "color": req.body.color,
-            "size": req.body.size,
+            "total": req.body.total,
+            // "vote": req.body.vote,
         }
     }
 });

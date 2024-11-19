@@ -16,7 +16,17 @@ router.post("/", (req, res) => {
     "status": "Succes",
     "data": {
         "users": { 
-            "text": "User created"
+            "id": req.body.id,
+            "name": req.body.name,
+            "email": req.body.email,
+            "password": req.body.password,
+            "street": req.body.street,
+            "number": req.body.number,
+            "zipcode": req.body.zipcode,
+            "city": req.body.city,
+            "country": req.body.country,
+            "phone": req.body.phone,
+            "role": req.body.role,
         }
     }
 });
