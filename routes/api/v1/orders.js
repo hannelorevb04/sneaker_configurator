@@ -1,32 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const ordersController = require('../../../controllers/api/v1/orders');
 
 /* api/v1/orders */
-router.get("/", (req, res) => {
-    res.json({
-        "status": "Succes",
-        "data": {
-            "orders": []
-        }
-    });
-});
+router.get("/", ordersController.getAll);
+router.post("/", ordersController.create);
+router.get("/:id", ordersController.getById);
+router.put("/:id", ordersController.update);
+router.post("/:id", ordersController.deleteById);
 
-router.post("/", (req, res) => {
-  res.json({ 
-    "status": "Succes",
-    "data": {
-        "order": { 
-            "orderId": req.params.orderId,
-            "productId": req.body.productId,
-            "customerId": req.body.customerId, 
-            "orderDate": req.body.orderDate, 
-            "status": req.body.status, 
-            "quantity": req.body.quantity,
-            "total": req.body.total,
-            // "vote": req.body.vote,
-        }
-    }
-});
-});
+
+
+
+
+
 
 module.exports = router;

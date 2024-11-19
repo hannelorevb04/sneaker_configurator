@@ -24,7 +24,6 @@ router.post("/", (req, res) => {
             "number": req.body.number,
             "zipcode": req.body.zipcode,
             "city": req.body.city,
-            "country": req.body.country,
             "phone": req.body.phone,
             "role": req.body.role,
         }

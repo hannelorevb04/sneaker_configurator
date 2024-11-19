@@ -1,20 +1,63 @@
-const Order = require('../../../models/api/v1/Order');
+const getAll = (req, res) => {
+    res.json({
+        "status": "Succes",
+        "data": {
+            "orders": []
+        }
+    });
+}
 
-const createOrder = (req, res) => {
-    const order = new Order(req.body);
-    order.save()
-        .then(() => {
-            res.json({
-                "status": "Succes",
-                "data": {
-                    "order": order
-                }
-            });
-        })
-        .catch((err) => {
-            res.json({
-                "status": "Error",
-                "message": err
-            });
-        });
+const create = (req, res) => {
+  res.json({ 
+    "status": "Succes",
+    "data": {
+        "order": { 
+            "orderId": req.params.orderId,
+            "productId": req.body.productId,
+            "customerId": req.body.customerId, 
+            "orderDate": req.body.orderDate, 
+            "status": req.body.status, 
+            "quantity": req.body.quantity,
+            "total": req.body.total,
+            // "vote": req.body.vote,
+        }
+    }
+});
+}
+
+const getById = (req, res) => {
+    res.json({ 
+    "status": "Succes",
+    "data": {
+        "order": { 
+            "orderId": req.params.orderId,
+            "productId": req.body.productId,
+            "customerId": req.body.customerId, 
+            "orderDate": req.body.orderDate, 
+            "status": req.body.status, 
+            "quantity": req.body.quantity,
+            "total": req.body.total,
+            // "vote": req.body.vote,
+        }
+    }
+});
+}
+const update = (req, res) => {
+    res.json({
+        "status": req.body.status,
+    })
+}
+const deleteById = (req, res) => {
+    res.json({
+        "orderId": req.body.orderId,
+    })
+}
+
+
+module.exports = {
+    getAll,
+    create,
+    getById,
+    update,
+    deleteById,
 }
