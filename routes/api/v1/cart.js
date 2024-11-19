@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const ordersController = require('../../../controllers/api/v1/orders');
+const cartController = require('../../../controllers/api/v1/cart');
 
 /* api/v1/cart */
-router.get("/", ordersController.getAll);
+router.get("/", cartController.getAll);
 
 router.post("/", (req, res) => {
   res.json({ 
