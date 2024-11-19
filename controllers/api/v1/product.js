@@ -2,7 +2,7 @@ const getAll = (req, res) => {
     res.json({
         "status": "Succes",
         "data": {
-            "cart": []
+            "product": []
         }
     });
 }
@@ -11,15 +11,16 @@ const create = (req, res) => {
   res.json({ 
     "status": "Succes",
     "data": {
-        "order": { 
-            "orderId": req.params.orderId,
-            "productId": req.body.productId,
-            "customerId": req.body.customerId, 
-            "orderDate": req.body.orderDate, 
-            "status": req.body.status, 
+        "product": { 
+            "id": req.body.id,
+            "name": req.body.name,
+            "description": req.body.description,
+            "shoeSize": req.body.shoeSize,
+            "shoeColor": req.body.shoeColor,
+            "shoelaceColor": req.body.shoelaceColor,
+            "price": req.body.price,
+            "availibility": req.body.availibility,
             "quantity": req.body.quantity,
-            "total": req.body.total,
-            // "vote": req.body.vote,
         }
     }
 });
