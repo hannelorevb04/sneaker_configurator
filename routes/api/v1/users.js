@@ -7,8 +7,12 @@ router.get("/", usersController.getAll);
 
 router.post("/", usersController.create);
 
-router.get("/:id", usersController.update);
 
-router.passwordUpdate("/:id", usersController.passwordUpdate);
+
+//router.get("/:id", usersController.update);
+router.put('/:id', usersController.update);
+
+// router.passwordUpdate("/:id", usersController.passwordUpdate);
+router.patch('/:id/password', usersController.passwordUpdate);
 
 module.exports = router;
