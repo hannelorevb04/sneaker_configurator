@@ -1,14 +1,18 @@
+// models/Product.js
 const mongoose = require('mongoose');
 
-const SneakerSchema = new mongoose.Schema({
+// Definieer het schema voor een product
+const productSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    description: { type: String },
-    shoeSize: { type: Number },
-    shoeColor: { type: String },
-    shoelaceColor: { type: String },
-    price: { type: Number },
-    availability: { type: Boolean, default: true },
-    quantity: { type: Number }
+    description: { type: String, required: true },
+    shoeSize: { type: Number, required: true },
+    shoeColor: { type: String, required: true },
+    shoelaceColor: { type: String, required: true },
+    price: { type: Number, required: true },
+    availability: { type: Boolean, required: true },
+    quantity: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Sneaker', SneakerSchema);
+// Maak en exporteer het model
+const Product = mongoose.model('Product', productSchema);
+module.exports = Product;

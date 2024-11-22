@@ -1,28 +1,26 @@
-let products = [];  // Deze array houdt de producten in het geheugen bij
+// controllers/api/v1/products.js
+const Product = require('../../../models/Product'); // Importeer het Mongoose Product model
 
 // Haalt alle producten op
 const getAll = async (req, res) => {
     try {
-        
+        const products = await Product.find(); // Haal alle producten uit de database
         res.json({
             status: "Success",
-            data: {
-                products: products
-            }
+            data: { products }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });
     }
 }
 
-
+// Maakt een nieuw product aan
 const create = async (req, res) => {
     try {
-        const { id, name, description, shoeSize, shoeColor, shoelaceColor, price, availability, quantity } = req.body;
+        const { name, description, shoeSize, shoeColor, shoelaceColor, price, availability, quantity } = req.body;
 
-        
-        const newProduct = {
-            id,
+        // Maak een nieuw product aan
+        const newProduct = new Product({
             name,
             description,
             shoeSize,
@@ -31,15 +29,14 @@ const create = async (req, res) => {
             price,
             availability,
             quantity
-        };
+        });
 
-        products.push(newProduct);
+        // Sla het product op in de database
+        await newProduct.save();
 
         res.json({
             status: "Success",
-            data: {
-                product: newProduct
-            }
+            data: { product: newProduct }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });

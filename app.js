@@ -3,14 +3,19 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const config = require('config'); // Importeer de configuratie slechts één keer
+const mongoose = require('mongoose'); // Importeer Mongoose
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const apiOrdersRouter = require('./routes/api/v1/orders');
 const apiProductsRouter = require('./routes/api/v1/products');
 
+const db = config.get('mongodb');
 
-
+mongoose.connect(db)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Failed to connect to MongoDB', err));
 
 const app = express();
 
