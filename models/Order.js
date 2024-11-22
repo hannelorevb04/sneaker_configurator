@@ -1,4 +1,4 @@
-/*const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 
 const Order = mongoose.model('Order', {
@@ -11,4 +11,3 @@ const Order = mongoose.model('Order', {
 });
 
 module.exports = Order;
-*/
