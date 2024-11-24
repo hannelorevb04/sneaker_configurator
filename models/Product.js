@@ -14,5 +14,5 @@ const productSchema = new mongoose.Schema({
 });
 
 // Maak en exporteer het model
-const Product = mongoose.model('Product', productSchema);
-module.exports = Product;
+
+module.exports = mongoose.model('Product', productSchema, 'Sneakers');

@@ -1,3 +1,6 @@
 {
-    "mongodb" : "mongodb://127.0.0.1:27017/test"
+  "mongodb": {
+    "uri": "mongodb://127.0.0.1:27017/SWEAR-configurator"
+    
+  }
 }
