@@ -1,49 +1,54 @@
-let orders = []; 
+const Order = require('../../../models/Order'); // Importeer het Order model
 
-const getAll = async (req, res) => {
+// Haal alle orders op
+const getAllOrders = async (req, res) => {
     try {
+        const orders = await Order.find();
         res.json({
             status: "Success",
-            data: {
-                orders: orders
-            }
+            data: { orders }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });
     }
-}
+};
 
-const create = async (req, res) => {
+// Maak een nieuwe order aan
+const createOrder = async (req, res) => {
     try {
-        const { productId, customerId, orderDate, status, quantity, total } = req.body;
-        const orderId = orders.length + 1;  
+        const { customerName, quantity, address, status, total } = req.body;
 
-        const order = {
-            orderId,
-            productId,
-            customerId,
-            orderDate,
-            status,
+        // Validatie
+        if (!customerName || !quantity || !address || !total) {
+            return res.status(400).json({
+                status: "Error",
+                message: "customerName, quantity, address, and total are required fields."
+            });
+        }
+
+        const newOrder = new Order({
+            customerName,
             quantity,
+            address,
+            status: status || 'Pending',
             total
-        };
+        });
 
-        orders.push(order);  
+        const savedOrder = await newOrder.save();
 
-        res.json({
+        res.status(201).json({
             status: "Success",
-            data: {
-                order: order
-            }
+            data: { order: savedOrder }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });
     }
-}
+};
 
-const getById = async (req, res) => {
+// Haal een specifieke order op
+const getOrderById = async (req, res) => {
     try {
-        const order = orders.find(o => o.orderId === parseInt(req.params.orderId)); 
+        const order = await Order.findById(req.params.orderId);
         if (!order) {
             return res.status(404).json({
                 status: "Error",
@@ -53,66 +58,63 @@ const getById = async (req, res) => {
 
         res.json({
             status: "Success",
-            data: {
-                order: order
-            }
+            data: { order }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });
     }
-}
+};
 
-const update = async (req, res) => {
+// Update een bestaande order
+const updateOrder = async (req, res) => {
     try {
-        const orderIndex = orders.findIndex(o => o.orderId === parseInt(req.params.orderId));  
-        if (orderIndex === -1) {
+        const updatedOrder = await Order.findByIdAndUpdate(
+            req.params.orderId,
+            req.body,
+            { new: true }
+        );
+
+        if (!updatedOrder) {
             return res.status(404).json({
                 status: "Error",
                 message: "Order not found"
             });
         }
 
-        const updatedOrder = { ...orders[orderIndex], ...req.body }; 
-        orders[orderIndex] = updatedOrder;  
-
         res.json({
             status: "Success",
-            data: {
-                order: updatedOrder
-            }
+            data: { order: updatedOrder }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });
     }
-}
+};
 
-const deleteById = async (req, res) => {
+// Verwijder een specifieke order
+const deleteOrderById = async (req, res) => {
     try {
-        const orderIndex = orders.findIndex(o => o.orderId === parseInt(req.params.orderId));  
-        if (orderIndex === -1) {
+        const deletedOrder = await Order.findByIdAndDelete(req.params.orderId);
+
+        if (!deletedOrder) {
             return res.status(404).json({
                 status: "Error",
                 message: "Order not found"
             });
         }
 
-        const deletedOrder = orders.splice(orderIndex, 1); 
-
         res.json({
             status: "Success",
-            data: {
-                orderId: deletedOrder[0].orderId
-            }
+            data: { orderId: deletedOrder._id }
         });
     } catch (error) {
         res.status(500).json({ status: "Error", message: error.message });
     }
-}
+};
 
 module.exports = {
-    getAll,
-    create,
-    getById,
-    update,
-    deleteById
-}
+    getAllOrders,
+    createOrder,
+    getOrderById,
+    updateOrder,
+    deleteOrderById
+};
