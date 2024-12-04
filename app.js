@@ -21,10 +21,6 @@ mongoose.connect(db)
 
 const app = express();
 
-// View engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 // Middleware
 app.use(logger('dev'));
 app.use(express.json());
@@ -39,29 +35,7 @@ app.use('/api/v1/orders', apiOrdersRouter);
 app.use('/api/v1/products', apiProductsRouter);
 app.use('/api/v1/users', apiUsersRouter);
 
-// Product-specific POST route
-const Product = require('./models/Product');
 
-// POST Route voor products
-app.post('/api/v1/products', async (req, res) => {
-  try {
-    const { name, price, description } = req.body;
-
-    // Validatie
-    if (!name || !price) {
-      return res.status(400).json({ error: "Product moet een naam en prijs hebben" });
-    }
-
-    // Nieuw product opslaan
-    const product = new Product({ name, price, description });
-    const savedProduct = await product.save();
-
-    res.status(201).json({ message: "Product toegevoegd", product: savedProduct });
-  } catch (err) {
-    console.error("Fout bij toevoegen product:", err);
-    res.status(500).json({ error: "Interne serverfout" });
-  }
-});
 
 
 app.use(function(req, res, next) {
