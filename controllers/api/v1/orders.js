@@ -87,7 +87,7 @@ const getOrderById = async (req, res) => {
     }
 };
 
-// Update een bestaande order
+/*-ADMIN*/// Update een bestaande order
 const updateOrder = async (req, res) => {
     try {
         const updatedOrder = await Order.findByIdAndUpdate(
@@ -112,7 +112,7 @@ const updateOrder = async (req, res) => {
     }
 };
 
-// Verwijder een specifieke order
+/*ADMIN*/// Verwijder een specifieke order
 const deleteOrderById = async (req, res) => {
     try {
         const deletedOrder = await Order.findByIdAndDelete(req.params.orderId);
