@@ -10,6 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const apiOrdersRouter = require('./routes/api/v1/orders');
 const apiProductsRouter = require('./routes/api/v1/products');
+const apiUsersRouter = require('./routes/api/v1/users');
 
 const db = config.get('mongodb.uri');
 
@@ -36,6 +37,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/v1/orders', apiOrdersRouter);
 app.use('/api/v1/products', apiProductsRouter);
+app.use('/api/v1/users', apiUsersRouter);
 
 // Product-specific POST route
 const Product = require('./models/Product');
