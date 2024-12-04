@@ -13,37 +13,59 @@ const getAllOrders = async (req, res) => {
     }
 };
 
-// Maak een nieuwe order aan
+// Maak een nieuwe order
 const createOrder = async (req, res) => {
     try {
-        const { customerName, quantity, address, status, total } = req.body;
-
-        // Validatie
-        if (!customerName || !quantity || !address || !total) {
-            return res.status(400).json({
-                status: "Error",
-                message: "customerName, quantity, address, and total are required fields."
-            });
-        }
-
-        const newOrder = new Order({
-            customerName,
-            quantity,
-            address,
-            status: status || 'Pending',
-            total
+      const { productId, clientDetails, totalPrice, status, orderDate } = req.body;
+  
+      // Validatie
+      if (
+        !productId ||
+        !clientDetails ||
+        !clientDetails.email ||
+        !clientDetails.phone ||
+        !clientDetails.address ||
+        !clientDetails.address.street ||
+        !clientDetails.address.city ||
+        !clientDetails.address.zip ||
+        !clientDetails.address.country ||
+        !totalPrice
+      ) {
+        return res.status(400).json({
+          status: "Error",
+          message:
+            "All fields in clientDetails (email, phone, address) and address (street, city, zip, country) are required.",
         });
-
-        const savedOrder = await newOrder.save();
-
-        res.status(201).json({
-            status: "Success",
-            data: { order: savedOrder }
-        });
+      }
+  
+      // Maak een nieuwe order
+      const newOrder = new Order({
+        productId,
+        clientDetails: {
+          email: clientDetails.email,
+          phone: clientDetails.phone,
+          address: clientDetails.address,
+        },
+        status: status || "Pending",
+        orderDate: orderDate || Date.now(),
+        totalPrice,
+      });
+  
+      // Sla de order op
+      const savedOrder = await newOrder.save();
+  
+      res.status(201).json({
+        status: "Success",
+        data: { order: savedOrder },
+      });
     } catch (error) {
-        res.status(500).json({ status: "Error", message: error.message });
+      res.status(500).json({
+        status: "Error",
+        message: error.message,
+      });
     }
-};
+  };
+
 
 // Haal een specifieke order op
 const getOrderById = async (req, res) => {
