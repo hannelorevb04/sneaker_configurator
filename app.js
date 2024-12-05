@@ -3,27 +3,29 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const config = require('config'); 
-const mongoose = require('mongoose'); 
+const config = require('config');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const apiOrdersRouter = require('./routes/api/v1/orders');
-const apiProductsRouter = require('./routes/api/v1/products');
-const apiUsersRouter = require('./routes/api/v1/users');
-
-const db = config.get('mongodb.uri');
+// Initialize express app
+const app = express();
 
 // Verbinden met MongoDB via Mongoose
-mongoose.connect(db)
+const dbUri = config.get('mongodb.uri');
+mongoose.connect(dbUri)
   .then(() => console.log('Verbonden met MongoDB'))
-  .catch(err => console.error('Fout bij verbinden met MongoDB', err));
-
-const app = express();
+  .catch(err => console.error('Fout bij verbinden met MongoDB:', err));
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug'); // Wijzig 'jade' naar 'pug'
+
+// Voeg CORS toe zodat cross-origin verzoeken toegestaan worden voor alle routes
+app.use(cors({
+  origin: 'http://localhost:5173',  // Sta alleen de frontend URL toe
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Middleware
 app.use(logger('dev'));
@@ -33,48 +35,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const apiOrdersRouter = require('./routes/api/v1/orders');
+const apiProductsRouter = require('./routes/api/v1/products');
+const apiUsersRouter = require('./routes/api/v1/users');
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/v1/orders', apiOrdersRouter);
 app.use('/api/v1/products', apiProductsRouter);
 app.use('/api/v1/users', apiUsersRouter);
 
-// Product-specific POST route
-const Product = require('./models/Product');
-
-// POST Route voor products
-app.post('/api/v1/products', async (req, res) => {
-  try {
-    const { name, price, description } = req.body;
-
-    // Validatie
-    if (!name || !price) {
-      return res.status(400).json({ error: "Product moet een naam en prijs hebben" });
-    }
-
-    // Nieuw product opslaan
-    const product = new Product({ name, price, description });
-    const savedProduct = await product.save();
-
-    res.status(201).json({ message: "Product toegevoegd", product: savedProduct });
-  } catch (err) {
-    console.error("Fout bij toevoegen product:", err);
-    res.status(500).json({ error: "Interne serverfout" });
-  }
-});
-
-
+// Foutafhandeling voor niet-gevonden routes
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
+// Algemene error handler
 app.use(function(err, req, res, next) {
-  
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  
   res.status(err.status || 500);
   res.render('error');
 });
