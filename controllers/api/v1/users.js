@@ -1,5 +1,7 @@
 const User = require('../../../models/User');
 
+const jwt = require('jsonwebtoken'); // Voeg JWT toe als import
+
 // Haal de admin user op
 const getUser = async (req, res) => {
     try {
@@ -51,32 +53,41 @@ const createUser = async (req, res) => {
     }
 };
 
-// Controleer het wachtwoord
+
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Haal de admin op
+        // Haal de gebruiker op met het ingevoerde e-mailadres
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ status: 'Error', message: 'User not found' });
         }
 
-        // Vergelijk het ingevoerde wachtwoord
+        // Controleer of het wachtwoord klopt
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             return res.status(401).json({ status: 'Error', message: 'Invalid password' });
         }
 
+        // Genereer een JWT-token
+        const token = jwt.sign(
+            { userId: user._id, email: user.email }, // Data in de payload
+            process.env.JWT_SECRET, // Geheime sleutel uit je .env-bestand
+            { expiresIn: '1h' } // Token verloopt na 1 uur
+        );
+
+        // Stuur de response terug met de token
         res.status(200).json({
-            status: 'Success',
+            status: 'success',
             message: 'Login successful',
-            data: { user }
+            data: { token }
         });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: error.message });
     }
 };
+
 
 module.exports = {
     getUser,
