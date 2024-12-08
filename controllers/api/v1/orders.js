@@ -1,10 +1,10 @@
-const Order = require('../../../models/Order'); // Importeer het Order model
-const Product = require('../../../models/Product'); // Importeer het Product-model
+const Order = require('../../../models/Order'); 
+const Product = require('../../../models/Product');
 
 
 const getAllOrders = async (req, res) => {
     try {
-      const orders = await Order.find().populate('productId'); // Koppelt de productinformatie
+      const orders = await Order.find().populate('productId'); // Koppelt productinformatie
   
       res.json({
         status: "Success",
@@ -16,12 +16,12 @@ const getAllOrders = async (req, res) => {
   };
   
 
-// Maak een nieuwe order
+// nieuwe order
 const createOrder = async (req, res) => {
     try {
       const { productId, clientDetails, totalPrice, status, orderDate } = req.body;
   
-      // Validatie van vereiste velden
+      
       if (
         !productId ||
         !clientDetails ||
@@ -41,7 +41,7 @@ const createOrder = async (req, res) => {
         });
       }
   
-      // Controleer of het product bestaat
+   
       const product = await Product.findById(productId);
       if (!product) {
         return res.status(404).json({
@@ -50,7 +50,7 @@ const createOrder = async (req, res) => {
         });
       }
   
-      // Maak een nieuwe order aan
+      
       const newOrder = new Order({
         productId,
         clientDetails: {
@@ -63,7 +63,7 @@ const createOrder = async (req, res) => {
         totalPrice,
       });
   
-      // Sla de order op
+      
       const savedOrder = await newOrder.save();
   
       res.status(201).json({
@@ -78,7 +78,7 @@ const createOrder = async (req, res) => {
     }
   };
 
-// Haal een specifieke order op
+// haal specifieke order op
 const getOrderById = async (req, res) => {
     try {
         const order = await Order.findById(req.params.orderId);
@@ -98,7 +98,7 @@ const getOrderById = async (req, res) => {
     }
 };
 
-/*-ADMIN*/// Update een bestaande order
+/*-ADMIN*/// update bestaande order
 const updateOrder = async (req, res) => {
     try {
         const updatedOrder = await Order.findByIdAndUpdate(
@@ -123,7 +123,7 @@ const updateOrder = async (req, res) => {
     }
 };
 
-/*ADMIN*/// Verwijder een specifieke order
+/*ADMIN*/// verwijder specifieke order
 const deleteOrderById = async (req, res) => {
     try {
         const deletedOrder = await Order.findByIdAndDelete(req.params.orderId);

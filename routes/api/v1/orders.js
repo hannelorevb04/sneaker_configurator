@@ -4,7 +4,7 @@ const orderController = require('../../../controllers/api/v1/orders');
 const { getAllOrders, createOrder, getOrderById, updateOrder, deleteOrderById } = require('../../../controllers/api/v1/orders');
 const authenticateToken = require('../../../middleware/auth.js');
 
-// Controleer of de functies correct zijn geïmporteerd
+
 if (!orderController.getAllOrders || !orderController.createOrder) {
     throw new Error('Order controller functies zijn niet correct geïmporteerd');
 }

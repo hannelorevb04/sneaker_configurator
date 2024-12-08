@@ -1,34 +1,34 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-// Definieer het schema voor een gebruiker
+
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true }, // Naam van de admin
-    email: { type: String, required: true, unique: true }, // Uniek e-mailadres
-    password: { type: String, required: true }, // Gehashed wachtwoord
+    name: { type: String, required: true }, 
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }, 
 });
 
-// Pre-save hook om wachtwoord te hashen
+
 userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next(); // Alleen hashen als het wachtwoord gewijzigd is
+    if (!this.isModified('password')) return next(); 
     try {
-        const salt = await bcrypt.genSalt(10); // Genereer een salt
-        this.password = await bcrypt.hash(this.password, salt); // Hash het wachtwoord
+        const salt = await bcrypt.genSalt(10); 
+        this.password = await bcrypt.hash(this.password, salt); 
         next();
     } catch (err) {
         next(err);
     }
 });
 
-// Methode om wachtwoord te verifiëren
+
 userSchema.methods.comparePassword = async function (inputPassword) {
     try {
-        return await bcrypt.compare(inputPassword, this.password); // Vergelijk wachtwoorden
+        return await bcrypt.compare(inputPassword, this.password); 
     } catch (err) {
         console.error('Fout bij het vergelijken van wachtwoorden:', err);
         throw err;
     }
 };
 
-// Maak en exporteer het model
+
 module.exports = mongoose.model('User', userSchema, 'Users');

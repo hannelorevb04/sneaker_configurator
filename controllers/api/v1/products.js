@@ -1,9 +1,9 @@
-const Product = require('../../../models/Product'); // Importeer het Mongoose Product model
+const Product = require('../../../models/Product'); 
 
-// Haalt alle producten op
+
 const getAll = async (req, res) => {
     try {
-        const products = await Product.find(); // Haal alle producten uit de database
+        const products = await Product.find(); 
         res.json({
             status: "Success",
             data: { products }
@@ -13,7 +13,7 @@ const getAll = async (req, res) => {
     }
 };
 
-// Maakt een nieuw product aan
+// nieuw product
 const create = async (req, res) => {
     try {
         const {
@@ -24,7 +24,7 @@ const create = async (req, res) => {
             materials
         } = req.body;
 
-        // Maak een nieuw product aan
+        
         const newProduct = new Product({
             model,
             startPrice,
@@ -43,7 +43,7 @@ const create = async (req, res) => {
             }
         });
 
-        // Sla het product op in de database
+        
         await newProduct.save();
 
         res.status(201).json({

@@ -1,9 +1,9 @@
 const User = require('../../../models/User');
 const bcrypt = require('bcryptjs');
 
-const jwt = require('jsonwebtoken'); // Voeg JWT toe als import
+const jwt = require('jsonwebtoken'); 
 
-// Haal de admin user op
+
 const getUser = async (req, res) => {
     try {
         const user = await User.findOne(); // Haal de enige admin user op
@@ -19,16 +19,16 @@ const getUser = async (req, res) => {
     }
 };
 
-// Maak de admin user aan (éénmalig)
+// admin user aanmaken (éénmalig)
 const createUser = async (req, res) => {
     try {
-        // Controleer of er al een admin bestaat
+        
         const existingUser = await User.findOne();
         if (existingUser) {
             return res.status(400).json({ status: 'Error', message: 'Admin user already exists' });
         }
 
-        // Maak de admin user aan
+        
         const { name, email, password } = req.body;
 
         if (email !== 'admin@admin.com' || password !== 'Admin') {
@@ -59,13 +59,13 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Haal de gebruiker op met het ingevoerde e-mailadres
+       
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ status: 'Error', message: 'User not found' });
         }
 
-        // Controleer of het wachtwoord klopt
+        
         const isMatch = await user.comparePassword(password);
         console.log('Ingevoerd wachtwoord:', password);
         console.log('Gehasht wachtwoord in database:', user.password);
@@ -75,14 +75,14 @@ const login = async (req, res) => {
             return res.status(401).json({ status: 'Error', message: 'Invalid password' });
         }
 
-        // Genereer een JWT-token
+       
         const token = jwt.sign(
-            { userId: user._id, email: user.email }, // Data in de payload
-            process.env.JWT_SECRET, // Geheime sleutel uit je .env-bestand
-            { expiresIn: '1h' } // Token verloopt na 1 uur
+            { userId: user._id, email: user.email }, 
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
         );
 
-        // Stuur de response terug met de token
+        
         res.status(200).json({
             status: 'success',
             message: 'Login successful',
@@ -107,7 +107,7 @@ const updatePassword = async (req, res) => {
             });
         }
 
-        // Haal de gebruiker op
+        
         const user = await User.findOne();
         if (!user) {
             return res.status(404).json({
@@ -116,7 +116,7 @@ const updatePassword = async (req, res) => {
             });
         }
 
-        // Controleer of het ingevoerde oude wachtwoord klopt
+        
         const isMatch = await user.comparePassword(oldPassword);
         if (!isMatch) {
             return res.status(400).json({
@@ -125,18 +125,17 @@ const updatePassword = async (req, res) => {
             });
         }
 
-        // Hash het nieuwe wachtwoord
+        
         const bcrypt = require('bcryptjs');
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
         
-
-        // Update het wachtwoord en sla het op
+        
         user.password = hashedPassword;
         await user.save();
 
-        // Genereer een nieuwe JWT-token
+      
         const jwt = require('jsonwebtoken');
         const token = jwt.sign(
             { userId: user._id, email: user.email },

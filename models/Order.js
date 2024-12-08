@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema; // Definieer Schema
+const Schema = mongoose.Schema; 
 
 /*const orderSchema = new mongoose.Schema({
-    customerName: { type: String, required: true }, // Naam van de klant
-    quantity: { type: Number, required: true }, // Aantal items
-    address: { type: String, required: true }, // Leveradres
-    status: { type: String, enum: ['Pending', 'Completed', 'Cancelled'], default: 'Pending' }, // Status van de bestelling
-    total: { type: Number, required: true } // Totale prijs van de bestelling
+    customerName: { type: String, required: true }, 
+    quantity: { type: Number, required: true }, 
+    address: { type: String, required: true }, 
+    status: { type: String, enum: ['Pending', 'Completed', 'Cancelled'], default: 'Pending' }, 
+    total: { type: Number, required: true } 
 });*/
 
 const orderSchema = new mongoose.Schema({
   productId: {
     type: Schema.Types.ObjectId,
-    ref: 'Product', // Verwijzing naar het Products schema
+    ref: 'Product', 
     required: true,
   },
   clientDetails: {
