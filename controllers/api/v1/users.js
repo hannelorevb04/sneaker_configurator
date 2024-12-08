@@ -1,4 +1,5 @@
 const User = require('../../../models/User');
+const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken'); // Voeg JWT toe als import
 
@@ -88,9 +89,65 @@ const login = async (req, res) => {
     }
 };
 
+// Wijzig het wachtwoord van de admin
+const updatePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        // Controleer of beide wachtwoorden aanwezig zijn
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({
+                status: 'Error',
+                message: 'Both old and new passwords are required',
+            });
+        }
+
+        // Haal de gebruiker op
+        const user = await User.findOne();
+        if (!user) {
+            return res.status(404).json({
+                status: 'Error',
+                message: 'User not found',
+            });
+        }
+
+        // Controleer of het ingevoerde oude wachtwoord klopt
+        const isMatch = await user.comparePassword(oldPassword);
+        if (!isMatch) {
+            return res.status(400).json({
+                status: 'Error',
+                message: 'Old password is incorrect',
+            });
+        }
+
+        // Hash het nieuwe wachtwoord
+        const bcrypt = require('bcryptjs');
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update het wachtwoord en sla het op
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Password updated successfully',
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'An error occurred while updating the password',
+        });
+    }
+};
+
+
+
 
 module.exports = {
     getUser,
     createUser,
-    login
+    login, 
+    updatePassword
 };
