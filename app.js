@@ -10,6 +10,10 @@ const http = require('http');
 /*const socketIo = require('socket.io');
 const bcrypt = require('bcryptjs');*/
 
+require('dotenv').config(); // Laad de .env-bestand variabelen
+
+
+
 // Verbind met de database
 connectDB();
 
@@ -55,6 +59,7 @@ app.use(function(err, req, res, next) {
       stack: req.app.get('env') === 'development' ? err.stack : {}
   });
 });
+
 
 
 module.exports = app;

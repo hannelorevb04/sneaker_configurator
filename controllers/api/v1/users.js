@@ -67,6 +67,10 @@ const login = async (req, res) => {
 
         // Controleer of het wachtwoord klopt
         const isMatch = await user.comparePassword(password);
+        console.log('Ingevoerd wachtwoord:', password);
+        console.log('Gehasht wachtwoord in database:', user.password);
+        console.log('Vergelijking geslaagd:', isMatch);
+
         if (!isMatch) {
             return res.status(401).json({ status: 'Error', message: 'Invalid password' });
         }
@@ -89,7 +93,8 @@ const login = async (req, res) => {
     }
 };
 
-// Wijzig het wachtwoord van de admin
+
+/*//  Wijzig het wachtwoord van de admin
 const updatePassword = async (req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
@@ -125,6 +130,8 @@ const updatePassword = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
+        
+
         // Update het wachtwoord en sla het op
         user.password = hashedPassword;
         await user.save();
@@ -143,11 +150,6 @@ const updatePassword = async (req, res) => {
             token: token, // Retourneer de nieuwe token
         });
 
-
-        res.status(200).json({
-            status: 'Success',
-            message: 'Password updated successfully',
-        });
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -155,7 +157,7 @@ const updatePassword = async (req, res) => {
             message: 'An error occurred while updating the password',
         });
     }
-};
+};*/
 
 
 
@@ -163,6 +165,6 @@ const updatePassword = async (req, res) => {
 module.exports = {
     getUser,
     createUser,
-    login, 
-    updatePassword
+    login,
+    /*updatePassword*/
 };
