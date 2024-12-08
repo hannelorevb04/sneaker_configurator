@@ -129,6 +129,21 @@ const updatePassword = async (req, res) => {
         user.password = hashedPassword;
         await user.save();
 
+        // Genereer een nieuwe JWT-token
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Password updated successfully',
+            token: token, // Retourneer de nieuwe token
+        });
+
+
         res.status(200).json({
             status: 'Success',
             message: 'Password updated successfully',
