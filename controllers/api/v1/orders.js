@@ -1,24 +1,27 @@
 const Order = require('../../../models/Order'); // Importeer het Order model
+const Product = require('../../../models/Product'); // Importeer het Product-model
 
-// Haal alle orders op
+
 const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find();
-        res.json({
-            status: "Success",
-            data: { orders }
-        });
+      const orders = await Order.find().populate('productId'); // Koppelt de productinformatie
+  
+      res.json({
+        status: "Success",
+        data: { orders },
+      });
     } catch (error) {
-        res.status(500).json({ status: "Error", message: error.message });
+      res.status(500).json({ status: "Error", message: error.message });
     }
-};
+  };
+  
 
 // Maak een nieuwe order
 const createOrder = async (req, res) => {
     try {
       const { productId, clientDetails, totalPrice, status, orderDate } = req.body;
   
-      // Validatie
+      // Validatie van vereiste velden
       if (
         !productId ||
         !clientDetails ||
@@ -38,7 +41,16 @@ const createOrder = async (req, res) => {
         });
       }
   
-      // Maak een nieuwe order
+      // Controleer of het product bestaat
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({
+          status: "Error",
+          message: "Product not found",
+        });
+      }
+  
+      // Maak een nieuwe order aan
       const newOrder = new Order({
         productId,
         clientDetails: {
@@ -65,7 +77,6 @@ const createOrder = async (req, res) => {
       });
     }
   };
-
 
 // Haal een specifieke order op
 const getOrderById = async (req, res) => {

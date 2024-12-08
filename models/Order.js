@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema; // Definieer Schema
 
 /*const orderSchema = new mongoose.Schema({
     customerName: { type: String, required: true }, // Naam van de klant
@@ -9,29 +10,29 @@ const mongoose = require('mongoose');
 });*/
 
 const orderSchema = new mongoose.Schema({
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product", // Verwijzing naar het Product-model
-      required: true,
+  productId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Product', // Verwijzing naar het Products schema
+    required: true,
+  },
+  clientDetails: {
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: {
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      zip: { type: String, required: true },
+      country: { type: String, required: true },
     },
-    clientDetails: {
-      email: { type: String, required: true },
-      phone: { type: String, required: true },
-      address: {
-        street: { type: String, required: true },
-        city: { type: String, required: true },
-        zip: { type: String, required: true },
-        country: { type: String, required: true },
-      },
-    },
-    status: {
-      type: String,
-      enum: ["Pending", "Completed", "Cancelled"],
-      default: "Pending",
-    },
-    totalPrice: { type: Number, required: true },
-    orderDate: { type: Date, default: Date.now },
-  });
-  
+  },
+  status: {
+    type: String,
+    enum: ["Pending", "Completed", "Cancelled"],
+    default: "Pending",
+  },
+  totalPrice: { type: Number, required: true },
+  orderDate: { type: Date, default: Date.now },
+});
+
 
 module.exports = mongoose.model('Order', orderSchema, 'Orders');
