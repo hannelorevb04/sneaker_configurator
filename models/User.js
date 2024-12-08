@@ -43,16 +43,7 @@ userSchema.methods.comparePassword = async function (inputPassword) {
     return await bcrypt.compare(inputPassword, this.password);
 };
 
-jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
-    if (err) return res.status(403).json({ message: 'Invalid token' });
 
-    const user = await User.findById(payload.userId);
-    if (!user || user.tokenVersion !== payload.tokenVersion) {
-        return res.status(403).json({ message: 'Token invalidated' });
-    }
-    req.user = user;
-    next();
-});
 
 
 // Maak en exporteer het model
